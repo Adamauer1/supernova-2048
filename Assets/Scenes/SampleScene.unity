@@ -665,7 +665,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b40e372d2640a44b290a2960bec110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 3901535004430537309, guid: 4a9645ee7873df9469e295778d53a0f0, type: 3}
+  tileStates:
+  - {fileID: 11400000, guid: 10865334adfa75941a64a7f9a3719c77, type: 2}
+  - {fileID: 11400000, guid: b3a58d183b28e5b48b90e887b904adda, type: 2}
+  - {fileID: 11400000, guid: f7dc5f12bbbb0f34b885aff02e889381, type: 2}
+  - {fileID: 11400000, guid: 454f2150447bb7048a093675dbb948c2, type: 2}
+  - {fileID: 11400000, guid: 48ba135522925b54a966de428ae99cae, type: 2}
+  - {fileID: 11400000, guid: cd7440e664f58d34884ff95bf24eb8bd, type: 2}
+  - {fileID: 11400000, guid: 3b3351d4ab404a54b8221ac5a8de42ac, type: 2}
+  tilePrefab: {fileID: -6885150039894436849, guid: 4a9645ee7873df9469e295778d53a0f0, type: 3}
 --- !u!114 &1545887918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -725,6 +733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1546783414}
+  - component: {fileID: 1546783415}
   m_Layer: 5
   m_Name: Grid
   m_TagString: Untagged
@@ -755,6 +764,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -32, y: -32}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1546783415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546783413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50d18de0d56ed7648a984ca56e332db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1764949746
 PrefabInstance:
   m_ObjectHideFlags: 0
