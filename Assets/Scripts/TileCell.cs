@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TileCell : MonoBehaviour
 {
-    public Tile tile;
-    public Vector2Int coords;
-    public bool Empty => tile == null;
+    public Tile Tile;
+    public Vector2Int Coords;
+    public bool Empty => Tile == null;
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78dc2b28eb44914b984f019d4663854, type: 3}
   m_Name: Hydrogen
   m_EditorClassIdentifier: 
-  element: H
-  backgroundColor: {r: 1, g: 0.495283, b: 0.495283, a: 0}
-  textColor: {r: 0, g: 0, b: 0, a: 0}
+  Element: H
+  BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  TextColor: {r: 0, g: 0, b: 0, a: 0}

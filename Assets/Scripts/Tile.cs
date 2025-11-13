@@ -5,53 +5,53 @@ using TMPro;
 
 public class Tile : MonoBehaviour
 {
-    public TileCell cell;
-    public TileState state;
-    public bool locked = false;
-    private TextMeshProUGUI text;
+    public TileCell Cell;
+    public TileState State;
+    public bool Locked = false;
+    private TextMeshProUGUI m_text;
 
     private void Awake(){
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        m_text = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void SetTileState(TileState state){
-        this.state = state;
+        this.State = state;
 
-        text.text = state.element;
+        m_text.text = state.Element;
     }
 
     public void PlaceTile(TileCell cell){
-        if (this.cell != null){
-            this.cell.tile = null;
+        if (this.Cell != null){
+            this.Cell.Tile = null;
         }
         
-        this.cell = cell;
+        this.Cell = cell;
 
-        this.cell.tile = this;
+        this.Cell.Tile = this;
 
         transform.position = cell.transform.position;
     }
 
     public void MoveTile(TileCell cell){
-      if (this.cell.tile != null){
-            this.cell.tile = null;
+      if (this.Cell.Tile != null){
+            this.Cell.Tile = null;
         }
         
-        this.cell = cell;
+        this.Cell = cell;
 
-        this.cell.tile = this;
+        this.Cell.Tile = this;
 
         // transform.position = cell.transform.position;
         StartCoroutine(Animate(cell.transform.position, false));  
     }
 
     public void MergeTile(TileCell cell){
-        if (this.cell.tile != null){
-            this.cell.tile = null;
+        if (this.Cell.Tile != null){
+            this.Cell.Tile = null;
         }
 
-        this.cell = null;
-        cell.tile.locked = true;
+        this.Cell = null;
+        cell.Tile.Locked = true;
 
 
         StartCoroutine(Animate(cell.transform.position, true));

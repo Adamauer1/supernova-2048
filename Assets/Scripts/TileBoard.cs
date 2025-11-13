@@ -8,40 +8,75 @@ using UnityEngine.InputSystem.Controls;
 
 public class TileBoard : MonoBehaviour
 {
-    private TileGrid grid;
-    private List<Tile> tiles;
-    [SerializeField] private TileState[] tileStates;
-    [SerializeField] private Tile tilePrefab;
+    private TileGrid m_grid;
+    private List<Tile> m_tiles;
+    [SerializeField] private TileState[] m_tileStates;
+    [SerializeField] private Tile m_tilePrefab;
 
-    private bool waiting = false;
+    private bool m_waiting = false;
 
     private void Awake() {
-        grid = GetComponentInChildren<TileGrid>();
-        tiles = new List<Tile>(16);
+        m_grid = GetComponentInChildren<TileGrid>();
+        m_tiles = new List<Tile>(16);
     }
 
-    private void Start(){
+    private void Start()
+    {
+        TouchInput.Instance.OnSwipeRight += TouchInput_OnSwipeRight;
+        TouchInput.Instance.OnSwipeLeft += TouchInput_OnSwipeLeft;
+        TouchInput.Instance.OnSwipeUp += TouchInput_OnSwipeUp;
+        TouchInput.Instance.OnSwipeDown += TouchInput_OnSwipeDown;
+        
+        
         CreateTile();
         CreateTile();
+    }
+
+    private void OnDisable()
+    {
+        TouchInput.Instance.OnSwipeRight -= TouchInput_OnSwipeRight;
+        TouchInput.Instance.OnSwipeLeft -= TouchInput_OnSwipeLeft;
+        TouchInput.Instance.OnSwipeUp -= TouchInput_OnSwipeUp;
+        TouchInput.Instance.OnSwipeDown -= TouchInput_OnSwipeDown;
+    }
+
+    private void TouchInput_OnSwipeRight(object sender, EventArgs eventArgs)
+    {
+        MoveTiles(Vector2Int.right, 2, -1, 0, 1);
+    }
+
+    private void TouchInput_OnSwipeLeft(object sender, EventArgs eventArgs)
+    {
+        MoveTiles(Vector2Int.left, 1, 1, 0, 1);
+    }
+
+    private void TouchInput_OnSwipeUp(object sender, EventArgs eventArgs)
+    {
+        MoveTiles(Vector2Int.up, 0, 1, 1, 1);
+    }
+
+    private void TouchInput_OnSwipeDown(object sender, EventArgs eventArgs)
+    {
+        MoveTiles(Vector2Int.down, 0, 1, 2, -1);
     }
 
     public void HandleInput(InputAction.CallbackContext context){
-        float XDirection = context.ReadValue<Vector2>().x;
-        float YDirection = context.ReadValue<Vector2>().y;
+        float xDirection = context.ReadValue<Vector2>().x;
+        float yDirection = context.ReadValue<Vector2>().y;
 
-        if (XDirection == 1){
+        if (xDirection == 1){
             //right
             MoveTiles(Vector2Int.right, 2, -1, 0, 1);
         }
-        else if (XDirection == -1){
+        else if (xDirection == -1){
             //left
             MoveTiles(Vector2Int.left, 1, 1, 0, 1);
         }
-        else if(YDirection == 1){
+        else if(yDirection == 1){
             //up
             MoveTiles(Vector2Int.up, 0, 1, 1, 1);
         }
-        else if (YDirection == -1){
+        else if (yDirection == -1){
             //down
             MoveTiles(Vector2Int.down, 0, 1, 2, -1);
         }
@@ -49,20 +84,21 @@ public class TileBoard : MonoBehaviour
 
     private void CreateTile(){
         //find empty grid cell and set it to that
-        Tile tile = Instantiate(tilePrefab, grid.transform);
-        tile.SetTileState(tileStates[0]);
-        tile.PlaceTile(grid.FindEmptyCell());
-        tiles.Add(tile);
+        Tile tile = Instantiate(m_tilePrefab, m_grid.transform);
+        tile.SetTileState(m_tileStates[0]);
+        tile.PlaceTile(m_grid.FindEmptyCell());
+        m_tiles.Add(tile);
     }
 
     private void MoveTiles(Vector2Int direction, int startX, int incX, int startY, int incY){
+        if (m_waiting) return;
         bool changed = false;
         for (int x = startX; x >= 0 && x < 4; x += incX){
             for (int y = startY; y >= 0 && y < 4; y += incY) {
-                TileCell cell = grid.GetCell(x,y);
+                TileCell cell = m_grid.GetCell(x,y);
                 // check if cell has a tile
                 if (!cell.Empty){
-                    changed = MoveTile(direction, cell.tile);
+                    changed = MoveTile(direction, cell.Tile);
                 }
                 // if it does then move tile
             }
@@ -75,20 +111,20 @@ public class TileBoard : MonoBehaviour
 
     private bool MoveTile(Vector2Int direction, Tile tile){
         TileCell newCell = null;
-        TileCell adjacentCell = grid.GetAdjacentCell(direction, tile.cell);
+        TileCell adjacentCell = m_grid.GetAdjacentCell(direction, tile.Cell);
 
         while (adjacentCell != null){
             if (!adjacentCell.Empty){
                 // check merge
-                if (CheckMerge(tile, adjacentCell.tile)){
-                    MergeTile(tile, adjacentCell.tile);
+                if (CheckMerge(tile, adjacentCell.Tile)){
+                    MergeTile(tile, adjacentCell.Tile);
                     return true;
                 }
                 break;
             }
 
             newCell = adjacentCell;
-            adjacentCell = grid.GetAdjacentCell(direction, adjacentCell);
+            adjacentCell = m_grid.GetAdjacentCell(direction, adjacentCell);
         }
 
         if (newCell != null){
@@ -99,44 +135,44 @@ public class TileBoard : MonoBehaviour
     }
 
     private bool CheckMerge(Tile mergedTile, Tile tile){
-        if (mergedTile.state == tile.state && !tile.locked && tile.state.element != "Fe"){
+        if (mergedTile.State == tile.State && !tile.Locked && tile.State.Element != "Fe"){
             return true;
         }
         return false;
     }
 
     private void MergeTile(Tile mergedTile, Tile tile){
-        tiles.Remove(mergedTile);
+        m_tiles.Remove(mergedTile);
         // merge tiles
-        mergedTile.MergeTile(tile.cell);
+        mergedTile.MergeTile(tile.Cell);
 
 
         int currentStateIndex = -1;
-        for (int i = 0; i < tileStates.Length; i++){
-            if (tile.state == tileStates[i]){
+        for (int i = 0; i < m_tileStates.Length; i++){
+            if (tile.State == m_tileStates[i]){
                 currentStateIndex = i;
             }
         }
 
-        int nextStateIndex = Mathf.Clamp(currentStateIndex + 1, 0, tileStates.Length - 1);
+        int nextStateIndex = Mathf.Clamp(currentStateIndex + 1, 0, m_tileStates.Length - 1);
 
-        tile.SetTileState(tileStates[nextStateIndex]);
+        tile.SetTileState(m_tileStates[nextStateIndex]);
     }
 
 
     private IEnumerator WaitForChanges()
         {
-            waiting = true;
+            m_waiting = true;
 
             yield return new WaitForSeconds(0.1f);
 
-            waiting = false;
+            m_waiting = false;
 
-            foreach (var tile in tiles) {
-                tile.locked = false;
+            foreach (Tile tile in m_tiles) {
+                tile.Locked = false;
             }
 
-            if (tiles.Count != 16) {
+            if (m_tiles.Count != 16) {
                 CreateTile();
             }
 

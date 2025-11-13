@@ -6,15 +6,15 @@ using UnityEngine;
 
 public class TileGrid : MonoBehaviour
 {
-    private TileRow[] rows;
-    private TileCell[] cells;
+    private TileRow[] m_rows;
+    private TileCell[] m_cells;
 
     private void Awake(){
-        rows = GetComponentsInChildren<TileRow>();
-        cells = GetComponentsInChildren<TileCell>();
+        m_rows = GetComponentsInChildren<TileRow>();
+        m_cells = GetComponentsInChildren<TileCell>();
 
-        for (int i = 0; i < cells.Length; i++){
-            cells[i].coords = new Vector2Int (i % 4, i / 4);
+        for (int i = 0; i < m_cells.Length; i++){
+            m_cells[i].Coords = new Vector2Int (i % 4, i / 4);
         }
     }
 
@@ -24,7 +24,7 @@ public class TileGrid : MonoBehaviour
 
     public TileCell GetCell(int x, int y){
         if (x >= 0 && x < 4 && y >= 0 && y < 4){
-            return rows[y].cells[x];
+            return m_rows[y].Cells[x];
         }
         else {
             return null;
@@ -32,7 +32,7 @@ public class TileGrid : MonoBehaviour
     }
 
     public TileCell GetAdjacentCell(Vector2Int direction, TileCell cell){
-        Vector2Int coords = cell.coords;
+        Vector2Int coords = cell.Coords;
 
         coords.x += direction.x;
         coords.y -= direction.y;
@@ -43,7 +43,7 @@ public class TileGrid : MonoBehaviour
 
     public TileCell FindEmptyCell(){
         System.Random random = new System.Random();
-        TileCell[] randomCells = cells.OrderBy(x => random.Next()).ToArray();
+        TileCell[] randomCells = m_cells.OrderBy(x => random.Next()).ToArray();
 
         foreach (TileCell cell in randomCells){
             if (cell.Empty){

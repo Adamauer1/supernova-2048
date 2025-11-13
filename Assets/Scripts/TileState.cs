@@ -6,7 +6,7 @@ using UnityEngine;
 public class TileState : ScriptableObject
 {
     //change to image
-    public string element;
-    public Color backgroundColor;
-    public Color textColor;
+    public string Element;
+    public Color BackgroundColor;
+    public Color TextColor;
 }
