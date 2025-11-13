@@ -15,3 +15,4 @@ MonoBehaviour:
   Element: C
   BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
   TextColor: {r: 0, g: 0, b: 0, a: 0}
+  ElementSprite: {fileID: 21300000, guid: d293550758c9e504db415e96de37a096, type: 3}

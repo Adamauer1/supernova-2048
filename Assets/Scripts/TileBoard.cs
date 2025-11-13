@@ -86,6 +86,7 @@ public class TileBoard : MonoBehaviour
         //find empty grid cell and set it to that
         Tile tile = Instantiate(m_tilePrefab, m_grid.transform);
         tile.SetTileState(m_tileStates[0]);
+        // tile.SetTileState(m_tileStates[6]);
         tile.PlaceTile(m_grid.FindEmptyCell());
         m_tiles.Add(tile);
     }
@@ -135,7 +136,7 @@ public class TileBoard : MonoBehaviour
     }
 
     private bool CheckMerge(Tile mergedTile, Tile tile){
-        if (mergedTile.State == tile.State && !tile.Locked && tile.State.Element != "Fe"){
+        if (mergedTile.State == tile.State && !tile.Locked){
             return true;
         }
         return false;
@@ -146,12 +147,19 @@ public class TileBoard : MonoBehaviour
         // merge tiles
         mergedTile.MergeTile(tile.Cell);
 
-
         int currentStateIndex = -1;
+        
         for (int i = 0; i < m_tileStates.Length; i++){
             if (tile.State == m_tileStates[i]){
                 currentStateIndex = i;
             }
+        }
+        
+        if (tile.State.Element == "Fe")
+        {
+            Debug.Log("SUPERNOVA!!!");
+            tile.SetTileState(m_tileStates[currentStateIndex]);
+            return;
         }
 
         int nextStateIndex = Mathf.Clamp(currentStateIndex + 1, 0, m_tileStates.Length - 1);

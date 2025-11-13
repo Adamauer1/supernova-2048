@@ -15,3 +15,4 @@ MonoBehaviour:
   Element: Fe
   BackgroundColor: {r: 0, g: 0, b: 0, a: 0}
   TextColor: {r: 0, g: 0, b: 0, a: 0}
+  ElementSprite: {fileID: 21300000, guid: f4b987c8a7d1e5f478c2e5df55946957, type: 3}

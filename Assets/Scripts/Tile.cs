@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
@@ -9,15 +10,18 @@ public class Tile : MonoBehaviour
     public TileState State;
     public bool Locked = false;
     private TextMeshProUGUI m_text;
+    private Image m_image; 
 
     private void Awake(){
         m_text = GetComponentInChildren<TextMeshProUGUI>();
+        m_image = GetComponent<Image>();
     }
 
     public void SetTileState(TileState state){
         this.State = state;
 
-        m_text.text = state.Element;
+        // m_text.text = state.Element;
+        m_image.sprite = state.ElementSprite;
     }
 
     public void PlaceTile(TileCell cell){
